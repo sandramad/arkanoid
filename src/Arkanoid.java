@@ -185,6 +185,7 @@ public class Arkanoid extends JFrame implements KeyListener {
 		}
 
 		void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D) g;
 			if (wygrana || koniec) {
 				name();
 				if (LVL == 0)
@@ -194,7 +195,6 @@ public class Arkanoid extends JFrame implements KeyListener {
 				else
 					font = font.deriveFont(35f);
 				Color color;
-				Graphics2D g2 = (Graphics2D) g;
 				if (wygrana == true) {
 					color = new Color(0, 100, 50);
 				} else {
@@ -219,11 +219,11 @@ public class Arkanoid extends JFrame implements KeyListener {
 				}
 			} else {
 				font = font.deriveFont(10f);
-				FontMetrics fontMetrics = g.getFontMetrics(font);
-				g.setColor(Color.WHITE);
-				g.setFont(font);
+				FontMetrics fontMetrics = g2.getFontMetrics(font);
+				g2.setColor(Color.WHITE);
+				g2.setFont(font);
 				int titleLen = fontMetrics.stringWidth(text);
-				g.drawString(text, (SZEROKOSC / 2) - (titleLen / 2), WYSOKOSC - 15);
+				g2.drawString(text, (SZEROKOSC / 2) - (titleLen / 2), WYSOKOSC - 15);
 
 			}
 		}
@@ -575,10 +575,17 @@ public class Arkanoid extends JFrame implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent event) {
-
-		if (event.getKeyCode() == KeyEvent.VK_ESCAPE)
-			uruchom = false;
-
+		if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			int wyjdz;
+			pauza = true;
+			wyjdz = JOptionPane.showOptionDialog(null, "Czy na pewno chcesz wyjść z gry?", "Arkanoid",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Tak", "Nie" },
+					"Nie");
+			if (wyjdz == 0)
+				uruchom = false;
+			else
+				pauza = false;
+		}
 		if (event.getKeyCode() == KeyEvent.VK_ENTER) {
 			if (name != null)
 				LVL = JOptionPane.showOptionDialog(null, name + ", jaki poziom teraz wybierasz?", "Arkanoid",
@@ -637,7 +644,6 @@ public class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	public static void main(String[] args) {
-
 		LVL = JOptionPane.showOptionDialog(null, "\nJaki poziom wybierasz?", "Arkanoid",
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 				new String[] { "Prosty", "Średni", "Trudny" }, "Trudny");
