@@ -19,3 +19,5 @@ Program liczy punkty: zbity klocek * ilość żyć pozostałych do końca rozgry
 <br />Jeśli imię kończy sie na "a", program weźmie Cię za kobietę
 
 Starałam się, aby komunikaty podsumowujące trzymały się polskiej gramatyki
+
+ps. To wersja edukacyjna - moje pierwsze zderzenie z Javą - uruchamiasz na własną odpowiedzialność - wszelkie konstruktywne podpowiedzi mile widziane
