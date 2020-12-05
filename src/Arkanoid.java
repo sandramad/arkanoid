@@ -4,6 +4,7 @@ import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -45,7 +46,6 @@ public class Arkanoid extends JFrame implements KeyListener {
 	public static double PREDKOSC = 0; // prędkosc zależna od lvl
 	private static int ruchy = 0; // ilość wykonanych ruchów w rundzie
 
-	private static final String FONT = "Ubuntu";
 	public static int LVL = 0;
 	public static String name = "Anonim";
 	private boolean tryAgain;
@@ -75,6 +75,18 @@ public class Arkanoid extends JFrame implements KeyListener {
 		abstract double gora();
 
 		abstract double dol();
+	}
+
+	private Font font(int w) {
+		try {
+			Font f = Font.createFont(Font.TRUETYPE_FONT, new java.io.File("ubuntu.ttf"));
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(f);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		Font u = new Font("Ubuntu", Font.PLAIN, w);
+		return u;
 	}
 
 	String name() {
@@ -121,7 +133,7 @@ public class Arkanoid extends JFrame implements KeyListener {
 		Font font;
 
 		Wyniki() {
-			font = new Font(FONT, Font.PLAIN, 10);
+			font = font(10);
 			text = "Witaj, wciśnij SPACJĘ, aby rozpocząć";
 		}
 
@@ -644,6 +656,7 @@ public class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	public static void main(String[] args) {
+
 		LVL = JOptionPane.showOptionDialog(null, "\nJaki poziom wybierasz?", "Arkanoid",
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 				new String[] { "Prosty", "Średni", "Trudny" }, "Trudny");
