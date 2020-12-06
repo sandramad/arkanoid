@@ -23,6 +23,6 @@ public class Start extends Thread  {
 	public static void main(String[] args) {
 
 		watek.start();
-		new Arkanoid().run();
+		new Arkanoid().start();
 	}
 }

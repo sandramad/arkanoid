@@ -18,36 +18,43 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 import java.awt.Toolkit;
 
-public class Arkanoid extends JFrame implements KeyListener {
-
+class Arkanoid extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1L;
 
-	public static int SZEROKOSC = 300; // wielkość małej planszy
-	public static int WYSOKOSC = 600; // wysokość - dla wszystkich taka sama
+	static String tytul = "Arkanoid";
+	static JLabel pytanie = new JLabel("Jaki poziom wybierasz?");
+	static JLabel uwaga = new JLabel("Musisz wybrać poziom");
+	static JLabel wyjsc = new JLabel("Czy na pewno chcesz wyjść z gry?");
+	static JLabel imie = new JLabel("Jak masz na imię?");
 
-	public static int KLOCKIX = 5; // ilość kloców w rzędzie
-	public static int KLOCKIY = 1; // ilość rzędów
+	static int SZEROKOSC = 750; // wielkość małej planszy
+	static int WYSOKOSC = 600; // wysokość - dla wszystkich taka sama
 
-	public static final double PROMIEN = 7.0; // Piłki
-	public static double PILKA_PREDKOSC = 0; // prędkość
+	static int KLOCKIX = 5; // ilość kloców w rzędzie
+	static int KLOCKIY = 1; // ilość rzędów
 
-	public static final double PALETKA_SZEROKOSC = 100.0; // szerokosc paletki
-	public static final double PALETKA_WYSOKOSC = 10.0; // Wysokość paletki
-	public static double PALETKA_PREDKOSC = 0; // prędkosc posunięć
+	static final double PROMIEN = 7.0; // Piłki
+	static double PILKA_PREDKOSC = 0; // prędkość
 
-	public static final double KLOCEK_SZEROKOSC = 40.0; // szrokość klocków
-	public static final double KLOCEK_WYSOKOSC = 10.0; // wysokość klocków
-	public static final int ZYCIA = 5; // ilość żyć gracza
+	static final double PALETKA_SZEROKOSC = 100.0; // szerokosc paletki
+	static final double PALETKA_WYSOKOSC = 10.0; // Wysokość paletki
+	static double PALETKA_PREDKOSC = 0; // prędkosc posunięć
 
-	public static double PREDKOSC = 0; // prędkosc zależna od lvl
+	static final double KLOCEK_SZEROKOSC = 40.0; // szrokość klocków
+	static final double KLOCEK_WYSOKOSC = 10.0; // wysokość klocków
+	static final int ZYCIA = 5; // ilość żyć gracza
+
+	static double PREDKOSC = 0; // prędkosc zależna od lvl
 	private static int ruchy = 0; // ilość wykonanych ruchów w rundzie
 
-	public static int LVL = 0;
-	public static String name = "Anonim";
+	static int LVL = -1;
+	static String name = "Anonim";
 	private boolean tryAgain;
 	private static boolean uruchom;
 	private boolean pauza = true;
@@ -64,8 +71,8 @@ public class Arkanoid extends JFrame implements KeyListener {
 	private double teraz;
 	private int kloc = KLOCKIX * KLOCKIY;
 
-	public static double predkoscX = PILKA_PREDKOSC;
-	public static double predkoscY = PILKA_PREDKOSC;
+	static double predkoscX = PILKA_PREDKOSC;
+	static double predkoscY = PILKA_PREDKOSC;
 
 	abstract class GameObject {
 		abstract double lewo();
@@ -77,23 +84,25 @@ public class Arkanoid extends JFrame implements KeyListener {
 		abstract double dol();
 	}
 
-	private Font font(int w) {
+	private static Font font(int w) {
 		try {
-			Font f = Font.createFont(Font.TRUETYPE_FONT, new java.io.File("ubuntu.ttf"));
+			Font f = Font.createFont(Font.TRUETYPE_FONT, new java.io.File("poppins.ttf"));
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(f);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		Font u = new Font("Ubuntu", Font.PLAIN, w);
+		Font u = new Font("Poppins", Font.PLAIN, w);
 		return u;
 	}
 
 	String name() {
+		imie.setFont(font(10));
+		imie.setForeground(Color.WHITE);
 		if (name.equals("Anonim"))
 			do
-				name = JOptionPane.showInputDialog("Jak masz na imię?", "Anonim");
-			while (name == null);
+				name = JOptionPane.showInputDialog(null, imie, tytul, JOptionPane.QUESTION_MESSAGE);
+			while (name == null || name.equals(""));
 		name = (name.charAt(0) + "").toUpperCase() + name.substring(1).toLowerCase();
 		return name;
 	}
@@ -180,7 +189,7 @@ public class Arkanoid extends JFrame implements KeyListener {
 					plec = "aś";
 				if (kloc == 1)
 					komunikatKloc = "Został Ci: " + kloc + "  blok, był" + plec + " blisko";
-				else if (kloc == 2 || kloc == 3 || kloc == 4)
+				else if (kloc % 10 >= 2 && kloc % 10 <= 4 && ((int) (kloc / 10) != 1))
 					komunikatKloc = "Zostały Ci: " + kloc + "  bloki, mało zabrakło";
 				else
 					komunikatKloc = "Zostało Ci: " + kloc + " bloków, spróbuj jeszcze raz";
@@ -246,7 +255,7 @@ public class Arkanoid extends JFrame implements KeyListener {
 
 		double predkosc = 0.0;
 
-		public Paletka(double x, double y) {
+		Paletka(double x, double y) {
 			this.x = x;
 			this.y = y;
 			this.sizeX = PALETKA_SZEROKOSC;
@@ -446,7 +455,7 @@ public class Arkanoid extends JFrame implements KeyListener {
 		}
 	}
 
-	public Arkanoid() {
+	Arkanoid() {
 
 		if (LVL == 0) {
 			SZEROKOSC = 300;
@@ -465,9 +474,9 @@ public class Arkanoid extends JFrame implements KeyListener {
 			kloc = KLOCKIX * KLOCKIY;
 		}
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setUndecorated(false);
 		this.setResizable(false);
-		this.setSize(SZEROKOSC, WYSOKOSC);
+		if (LVL >= 0)
+			this.setSize(SZEROKOSC, WYSOKOSC);
 		this.setVisible(true);
 		this.addKeyListener(this);
 		this.setLocationRelativeTo(null); // aby okno było po środku;
@@ -504,9 +513,6 @@ public class Arkanoid extends JFrame implements KeyListener {
 					this.setVisible(false);
 					pauza = true;
 					ruchy = 0;
-					PALETKA_PREDKOSC = 0;
-					PILKA_PREDKOSC = 0;
-					PREDKOSC = 0;
 					name = "Anonim";
 
 					new Arkanoid().run();
@@ -590,19 +596,21 @@ public class Arkanoid extends JFrame implements KeyListener {
 		if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			int wyjdz;
 			pauza = true;
-			wyjdz = JOptionPane.showOptionDialog(null, "Czy na pewno chcesz wyjść z gry?", "Arkanoid",
-					JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Tak", "Nie" },
-					"Nie");
+			wyjsc.setFont(font(12));
+			wyjsc.setForeground(Color.WHITE);
+			wyjdz = JOptionPane.showOptionDialog(null, wyjsc, tytul, JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE, null, new String[] { "Tak", "Nie" }, "Nie");
 			if (wyjdz == 0)
 				uruchom = false;
 			else
 				pauza = false;
 		}
 		if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+			pytanie.setFont(font(12));
+			pytanie.setForeground(Color.WHITE);
 			if (name != null)
-				LVL = JOptionPane.showOptionDialog(null, name + ", jaki poziom teraz wybierasz?", "Arkanoid",
-						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-						new String[] { "Prosty", "Średni", "Trudny" }, "Trudny");
+				LVL = JOptionPane.showOptionDialog(null, pytanie, tytul, JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, new String[] { "Prosty", "Średni", "Trudny" }, "Trudny");
 			kloc = 0;
 			tryAgain = true;
 		}
@@ -655,16 +663,29 @@ public class Arkanoid extends JFrame implements KeyListener {
 
 	}
 
-	public static void main(String[] args) {
+	public void start() {
+		pytanie.setFont(font(12));
+		pytanie.setForeground(Color.WHITE);
+		uwaga.setFont(font(12));
+		uwaga.setForeground(Color.WHITE);
+		UIManager.put("TextField.font", font(15));
+		UIManager.put("OptionPane.background", Color.BLACK);
+		UIManager.put("Panel.background", Color.BLACK);
+		UIManager.put("Button.font", font(12));
+		UIManager.put("Button.background", Color.ORANGE);
 
-		LVL = JOptionPane.showOptionDialog(null, "\nJaki poziom wybierasz?", "Arkanoid",
-				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-				new String[] { "Prosty", "Średni", "Trudny" }, "Trudny");
+		LVL = JOptionPane.showOptionDialog(null, pytanie, tytul, JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, new String[] { "Prosty", "Średni", "Trudny" }, "Trudny");
+
 		if (LVL > -1)
 			new Arkanoid().run();
 		else
-			LVL = JOptionPane.showOptionDialog(null, "\nMusisz wybrać poziom", "Arkanoid", JOptionPane.CLOSED_OPTION,
+			LVL = JOptionPane.showOptionDialog(null, uwaga, tytul, JOptionPane.CLOSED_OPTION,
 					JOptionPane.WARNING_MESSAGE, null, new String[] { "Rozumiem" }, "Rozumiem");
+	}
+
+	public static void main(String[] args) {
+		new Arkanoid().start();
 		System.exit(0);
 	}
 
