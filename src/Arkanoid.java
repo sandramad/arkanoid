@@ -456,7 +456,8 @@ class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	Arkanoid() {
-		// wybieamy poziom i ustawiamy w nim zmienne - szerokość i liczbę klocków do zbicia
+		// wybieamy poziom i ustawiamy w nim zmienne - szerokość i liczbę klocków do
+		// zbicia
 		if (LVL == 0) {
 			SZEROKOSC = 300;
 			KLOCKIX = 5;
@@ -477,7 +478,10 @@ class Arkanoid extends JFrame implements KeyListener {
 		this.setResizable(false); // uniemożlwia zmianę rozmiaru okna gry
 		if (LVL >= 0)
 			this.setSize(SZEROKOSC, WYSOKOSC); // jeśli wygrałeś poziom dopiero wyświetli okno (powiększy)
-		this.setVisible(true); // widoczny
+		if (tryAgain == true)
+			this.setVisible(false); // widoczny
+		else
+			this.setVisible(true); // widoczny
 		this.addKeyListener(this); // interakcja z userem
 		this.setLocationRelativeTo(null); // aby okno było po środku;
 
@@ -490,7 +494,6 @@ class Arkanoid extends JFrame implements KeyListener {
 	void run() {
 		paletka = new Paletka(SZEROKOSC / 2, WYSOKOSC - 50); // ustawia paletkę na środku okna
 		pilka = new Pilka(SZEROKOSC / 2, WYSOKOSC - 60); // ustawia piłkę na środku okna, nad paletką
-		uruchom = true; // uruchamiamy grę
 
 		while (uruchom) {
 			long time1 = System.currentTimeMillis();
@@ -512,6 +515,8 @@ class Arkanoid extends JFrame implements KeyListener {
 					pauza = true;
 					ruchy = 0;
 					name = "Anonim";
+					LVL = -1;
+					setVisible(false);
 
 					start();
 				}
@@ -659,6 +664,7 @@ class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	public static void start() {
+		uruchom = true;
 		pytanie.setFont(font(14));
 		pytanie.setForeground(Color.WHITE);
 		uwaga.setFont(font(14));
