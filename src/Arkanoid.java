@@ -97,7 +97,7 @@ class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	String name() {
-		imie.setFont(font(10));
+		imie.setFont(font(14));
 		imie.setForeground(Color.WHITE);
 		if (name.equals("Anonim"))
 			do
@@ -142,7 +142,7 @@ class Arkanoid extends JFrame implements KeyListener {
 		Font font;
 
 		Wyniki() {
-			font = font(10);
+			font = font(12);
 			text = "Witaj, wciśnij SPACJĘ, aby rozpocząć";
 		}
 
@@ -456,7 +456,7 @@ class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	Arkanoid() {
-
+		// wybieamy poziom i ustawiamy w nim zmienne - szerokość i liczbę klocków do zbicia
 		if (LVL == 0) {
 			SZEROKOSC = 300;
 			KLOCKIX = 5;
@@ -473,12 +473,12 @@ class Arkanoid extends JFrame implements KeyListener {
 			KLOCKIY = 5;
 			kloc = KLOCKIX * KLOCKIY;
 		}
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(false);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // domyślne przyciski zamykające okno
+		this.setResizable(false); // uniemożlwia zmianę rozmiaru okna gry
 		if (LVL >= 0)
-			this.setSize(SZEROKOSC, WYSOKOSC);
-		this.setVisible(true);
-		this.addKeyListener(this);
+			this.setSize(SZEROKOSC, WYSOKOSC); // jeśli wygrałeś poziom dopiero wyświetli okno (powiększy)
+		this.setVisible(true); // widoczny
+		this.addKeyListener(this); // interakcja z userem
 		this.setLocationRelativeTo(null); // aby okno było po środku;
 
 		this.createBufferStrategy(2);
@@ -488,12 +488,11 @@ class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	void run() {
-		paletka = new Paletka(SZEROKOSC / 2, WYSOKOSC - 50);
-		pilka = new Pilka(SZEROKOSC / 2, WYSOKOSC - 60);
-		uruchom = true;
+		paletka = new Paletka(SZEROKOSC / 2, WYSOKOSC - 50); // ustawia paletkę na środku okna
+		pilka = new Pilka(SZEROKOSC / 2, WYSOKOSC - 60); // ustawia piłkę na środku okna, nad paletką
+		uruchom = true; // uruchamiamy grę
 
 		while (uruchom) {
-
 			long time1 = System.currentTimeMillis();
 
 			if (!Wyniki.koniec && !Wyniki.wygrana) {
@@ -510,12 +509,11 @@ class Arkanoid extends JFrame implements KeyListener {
 			} else {
 				if (tryAgain) {
 					tryAgain = false;
-					this.setVisible(false);
 					pauza = true;
 					ruchy = 0;
 					name = "Anonim";
 
-					new Arkanoid().run();
+					new Arkanoid().start();
 				}
 			}
 
@@ -596,7 +594,7 @@ class Arkanoid extends JFrame implements KeyListener {
 		if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			int wyjdz;
 			pauza = true;
-			wyjsc.setFont(font(12));
+			wyjsc.setFont(font(14));
 			wyjsc.setForeground(Color.WHITE);
 			wyjdz = JOptionPane.showOptionDialog(null, wyjsc, tytul, JOptionPane.OK_CANCEL_OPTION,
 					JOptionPane.QUESTION_MESSAGE, null, new String[] { "Tak", "Nie" }, "Nie");
@@ -606,7 +604,7 @@ class Arkanoid extends JFrame implements KeyListener {
 				pauza = false;
 		}
 		if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-			pytanie.setFont(font(12));
+			pytanie.setFont(font(14));
 			pytanie.setForeground(Color.WHITE);
 			if (name != null)
 				LVL = JOptionPane.showOptionDialog(null, pytanie, tytul, JOptionPane.YES_NO_CANCEL_OPTION,
@@ -664,11 +662,11 @@ class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	public void start() {
-		pytanie.setFont(font(12));
+		pytanie.setFont(font(14));
 		pytanie.setForeground(Color.WHITE);
-		uwaga.setFont(font(12));
+		uwaga.setFont(font(14));
 		uwaga.setForeground(Color.WHITE);
-		UIManager.put("TextField.font", font(15));
+		UIManager.put("TextField.font", font(12));
 		UIManager.put("OptionPane.background", Color.BLACK);
 		UIManager.put("Panel.background", Color.BLACK);
 		UIManager.put("Button.font", font(12));
@@ -682,11 +680,11 @@ class Arkanoid extends JFrame implements KeyListener {
 		else
 			LVL = JOptionPane.showOptionDialog(null, uwaga, tytul, JOptionPane.CLOSED_OPTION,
 					JOptionPane.WARNING_MESSAGE, null, new String[] { "Rozumiem" }, "Rozumiem");
+		System.exit(0);
 	}
 
 	public static void main(String[] args) {
 		new Arkanoid().start();
-		System.exit(0);
 	}
 
 }
