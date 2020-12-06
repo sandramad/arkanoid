@@ -513,7 +513,7 @@ class Arkanoid extends JFrame implements KeyListener {
 					ruchy = 0;
 					name = "Anonim";
 
-					new Arkanoid().start();
+					start();
 				}
 			}
 
@@ -606,9 +606,6 @@ class Arkanoid extends JFrame implements KeyListener {
 		if (event.getKeyCode() == KeyEvent.VK_ENTER) {
 			pytanie.setFont(font(14));
 			pytanie.setForeground(Color.WHITE);
-			if (name != null)
-				LVL = JOptionPane.showOptionDialog(null, pytanie, tytul, JOptionPane.YES_NO_CANCEL_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null, new String[] { "Prosty", "Średni", "Trudny" }, "Trudny");
 			kloc = 0;
 			tryAgain = true;
 		}
@@ -661,7 +658,7 @@ class Arkanoid extends JFrame implements KeyListener {
 
 	}
 
-	public void start() {
+	public static void start() {
 		pytanie.setFont(font(14));
 		pytanie.setForeground(Color.WHITE);
 		uwaga.setFont(font(14));
@@ -684,7 +681,7 @@ class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	public static void main(String[] args) {
-		new Arkanoid().start();
+		start();
 	}
 
 }
