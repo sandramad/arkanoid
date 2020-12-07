@@ -41,9 +41,10 @@ class Arkanoid extends JFrame implements KeyListener {
 
 	static final double PROMIEN = 7.0; // Piłki
 	static double PILKA_PREDKOSC = 0; // prędkość
+	static Color pilkaColor = Color.WHITE;
 
 	static final double PALETKA_SZEROKOSC = 100.0; // szerokosc paletki
-	static final double PALETKA_WYSOKOSC = 10.0; // Wysokość paletki
+	static final double PALETKA_WYSOKOSC = 7.0; // Wysokość paletki
 	static double PALETKA_PREDKOSC = 0; // prędkosc posunięć
 
 	static final double KLOCEK_SZEROKOSC = 40.0; // szrokość klocków
@@ -295,8 +296,11 @@ class Arkanoid extends JFrame implements KeyListener {
 		}
 
 		void paintComponent(Graphics g) {
-			g.setColor(Color.ORANGE);
-			g.fillRect((int) (lewo()), (int) (gora()), (int) sizeX, (int) sizeY);
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			GradientPaint gColor1 = new GradientPaint((int) (lewo()), (int) (gora()), Color.ORANGE, (int) (lewo()+PALETKA_SZEROKOSC/2), (int) (gora()), Color.WHITE);
+			g2.setPaint(gColor1);
+			g2.fillRect((int) (lewo()), (int) (gora()), (int) sizeX, (int) sizeY);
 		}
 
 	}
@@ -355,7 +359,7 @@ class Arkanoid extends JFrame implements KeyListener {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			g2.setColor(Color.LIGHT_GRAY);
+			g2.setColor(pilkaColor);
 			g2.fillOval((int) lewo(), (int) gora(), (int) promien * 2, (int) promien * 2);
 
 		}
@@ -558,6 +562,8 @@ class Arkanoid extends JFrame implements KeyListener {
 				if (klocek.zniszczone) {
 					it.remove();
 					Toolkit.getDefaultToolkit().beep();
+					pilkaColor = new Color((int) (Math.random() * 10 + 245), (int) (Math.random() * 125 + 130),
+							(int) (Math.random() * 1));
 					kloc--;
 				}
 			}
@@ -669,11 +675,18 @@ class Arkanoid extends JFrame implements KeyListener {
 		pytanie.setForeground(Color.WHITE);
 		uwaga.setFont(font(14));
 		uwaga.setForeground(Color.WHITE);
+		List<Object> value = new ArrayList<Object>(5);
+		value.add(0.50);
+		value.add(0.00);
+		value.add( Color.ORANGE);
+		value.add(Color.WHITE);
+		value.add(Color.ORANGE);
 		UIManager.put("TextField.font", font(12));
 		UIManager.put("OptionPane.background", Color.BLACK);
 		UIManager.put("Panel.background", Color.BLACK);
 		UIManager.put("Button.font", font(12));
-		UIManager.put("Button.background", Color.ORANGE);
+//		UIManager.put("Button.background", Color.ORANGE);
+		UIManager.put("Button.gradient", value);
 
 		LVL = JOptionPane.showOptionDialog(null, pytanie, tytul, JOptionPane.YES_NO_CANCEL_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, new String[] { "Prosty", "Średni", "Trudny" }, "Trudny");
