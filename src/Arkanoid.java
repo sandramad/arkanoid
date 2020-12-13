@@ -11,10 +11,15 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -25,13 +30,16 @@ import javax.swing.UIManager;
 import java.awt.Toolkit;
 
 class Arkanoid extends JFrame implements KeyListener {
-	private static final long serialVersionUID = 1L;
+	LocalDate nowDate = LocalDate.now();
 
+	private static final long serialVersionUID = 1L;
+	ArrayList<TablicaWynikow> dane = new ArrayList<TablicaWynikow>();
 	static String tytul = "Arkanoid";
 	static JLabel pytanie = new JLabel("Jaki poziom wybierasz?");
 	static JLabel uwaga = new JLabel("Musisz wybrać poziom");
 	static JLabel wyjsc = new JLabel("Czy na pewno chcesz wyjść z gry?");
 	static JLabel imie = new JLabel("Jak masz na imię?");
+	Font font;
 
 	static int SZEROKOSC = 750; // wielkość małej planszy
 	static int WYSOKOSC = 600; // wysokość - dla wszystkich taka sama
@@ -41,11 +49,12 @@ class Arkanoid extends JFrame implements KeyListener {
 
 	static final double PROMIEN = 7.0; // Piłki
 	static double PILKA_PREDKOSC = 0; // prędkość
-	static Color pilkaColor = Color.WHITE;
+	static Color pilkaColor = Color.WHITE; // początkowy kolor piłecczki - co zbicie klocka zmienia kolor - wariacje
+											// zielonego i czerwonego - na ogół odcienie żółtego i pomarańczowego
 
 	static final double PALETKA_SZEROKOSC = 100.0; // szerokosc paletki
 	static final double PALETKA_WYSOKOSC = 7.0; // Wysokość paletki
-	static double PALETKA_PREDKOSC = 0; // prędkosc posunięć
+	static double PALETKA_PREDKOSC = 0; // prędkosc posunięć paletki
 
 	static final double KLOCEK_SZEROKOSC = 40.0; // szrokość klocków
 	static final double KLOCEK_WYSOKOSC = 10.0; // wysokość klocków
@@ -55,10 +64,10 @@ class Arkanoid extends JFrame implements KeyListener {
 	private static int ruchy = 0; // ilość wykonanych ruchów w rundzie
 
 	static int LVL = -1;
-	static String name = "Anonim";
+	static String name = "Anonim"; // i tak będziesz musiał się jakoś przedstawić :)
 	private boolean tryAgain;
 	private static boolean uruchom;
-	private boolean pauza = true;
+	private boolean pauza = true; // gra uruchamia sę zatrzymana
 
 	private Paletka paletka = new Paletka(SZEROKOSC / 2, WYSOKOSC - 50);
 	private Pilka pilka = new Pilka(SZEROKOSC / 2, WYSOKOSC - 60);
@@ -140,11 +149,39 @@ class Arkanoid extends JFrame implements KeyListener {
 		boolean koniec = false;
 		String text = "";
 
-		Font font;
-
 		Wyniki() {
 			font = font(12);
 			text = "Witaj, wciśnij SPACJĘ, aby rozpocząć";
+		}
+
+		void zapisWyniku() {
+			String zawartoscPliku = "";
+
+			Scanner scan = null;
+			try {
+				scan = new Scanner(new File("wyniki.txt"));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			while (scan.hasNextLine()) {
+				zawartoscPliku += scan.nextLine();
+				zawartoscPliku += "\n";
+			}
+			scan.close();
+			for (TablicaWynikow x : dane) {
+				zawartoscPliku += x.getNazwa() + ";" + x.getPkt() + ";" + x.lvl + ";" + x.getData();
+			}
+			PrintWriter pw;
+			try {
+				pw = new PrintWriter(new File("wyniki.txt"));
+				pw.print(zawartoscPliku);
+				pw.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			System.out.println();
 		}
 
 		String odmianaRuchy() {
@@ -178,6 +215,8 @@ class Arkanoid extends JFrame implements KeyListener {
 				text = name() + " wygrał" + plec + "! \nTwój wynik: " + wynik + " na " + (ZYCIA * KLOCKIX * KLOCKIY)
 						+ " punktów\n" + komunikatZyc + "\nWykonał" + plec + ": " + ruchy + odmianaRuchy()
 						+ "\n\nWciśnij Enter aby zrestartować" + "\n ESC wychodzi z gry";
+				dane.add(new TablicaWynikow(name(), wynik, LVL, nowDate));
+				zapisWyniku();
 			} else
 				terazWyniki();
 		}
@@ -198,6 +237,8 @@ class Arkanoid extends JFrame implements KeyListener {
 				text = name() + " przegrał" + plec + "! \nTwój wynik: " + wynik + " na " + (ZYCIA * KLOCKIX * KLOCKIY)
 						+ " punktów\nWykonał" + plec + ": " + ruchy + odmianaRuchy() + "\n" + komunikatKloc
 						+ "\n\nWciśnij Enter aby zrestartować" + "\n ESC wychodzi z gry";
+				dane.add(new TablicaWynikow(name(), wynik, LVL, nowDate));
+				zapisWyniku();
 			} else
 				terazWyniki();
 		}
@@ -239,6 +280,18 @@ class Arkanoid extends JFrame implements KeyListener {
 					g2.drawString(line, (SZEROKOSC / 2) - (titleLen / 2), (SZEROKOSC / 6) + (titleHeight * lineNumber));
 					lineNumber++;
 				}
+				String rank = "";
+				try {
+					rank = TablicaWynikow.Rank();
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				System.out.println(rank);
+
 			} else {
 				font = font.deriveFont(10f);
 				FontMetrics fontMetrics = g2.getFontMetrics(font);
@@ -248,6 +301,38 @@ class Arkanoid extends JFrame implements KeyListener {
 				g2.drawString(text, (SZEROKOSC / 2) - (titleLen / 2), WYSOKOSC - 15);
 
 			}
+		}
+
+	}
+
+	class Ranking {
+		void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D) g;
+			name();
+			if (LVL == 0)
+				font = font.deriveFont(15f);
+			else if (LVL == 1)
+				font = font.deriveFont(25f);
+			else
+				font = font.deriveFont(35f);
+			Color color = Color.DARK_GRAY;
+			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			GradientPaint gColor1 = new GradientPaint(0, 0, color, SZEROKOSC / 2, 0, Color.BLACK);
+			g2.setPaint(gColor1);
+			g2.fillRect(0, 0, SZEROKOSC / 2, WYSOKOSC);
+			GradientPaint gColor2 = new GradientPaint(SZEROKOSC / 2, 0, Color.BLACK, SZEROKOSC - 10, 0, color);
+			g2.setPaint(gColor2);
+			g2.fillRect(SZEROKOSC / 2 - 2, 0, SZEROKOSC / 2, WYSOKOSC);
+			g2.setColor(Color.WHITE);
+			g2.setFont(font);
+			String rank = null;
+			try {
+				rank = TablicaWynikow.Rank();
+				System.out.println(rank);
+			} catch (NumberFormatException | FileNotFoundException | ParseException e) {
+				e.printStackTrace();
+			}
+			g2.drawString(rank, 0, 0);
 		}
 
 	}
@@ -298,7 +383,8 @@ class Arkanoid extends JFrame implements KeyListener {
 		void paintComponent(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			GradientPaint gColor1 = new GradientPaint((int) (lewo()), (int) (gora()), Color.ORANGE, (int) (lewo()+PALETKA_SZEROKOSC/2), (int) (gora()), Color.WHITE);
+			GradientPaint gColor1 = new GradientPaint((int) (lewo()), (int) (gora()), Color.ORANGE,
+					(int) (lewo() + PALETKA_SZEROKOSC / 2), (int) (gora()), Color.WHITE);
 			g2.setPaint(gColor1);
 			g2.fillRect((int) (lewo()), (int) (gora()), (int) sizeX, (int) sizeY);
 		}
@@ -602,7 +688,13 @@ class Arkanoid extends JFrame implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+		if (event.getKeyCode() == KeyEvent.VK_R) {
+			new Ranking();
+		}
+		if (event.getKeyCode() == KeyEvent.VK_ESCAPE)
+
+		{
+
 			int wyjdz;
 			pauza = true;
 			wyjsc.setFont(font(14));
@@ -613,6 +705,7 @@ class Arkanoid extends JFrame implements KeyListener {
 				uruchom = false;
 			else
 				pauza = false;
+
 		}
 		if (event.getKeyCode() == KeyEvent.VK_ENTER) {
 			pytanie.setFont(font(14));
@@ -678,14 +771,13 @@ class Arkanoid extends JFrame implements KeyListener {
 		List<Object> value = new ArrayList<Object>(5);
 		value.add(0.50);
 		value.add(0.00);
-		value.add( Color.ORANGE);
+		value.add(Color.ORANGE);
 		value.add(Color.WHITE);
 		value.add(Color.ORANGE);
 		UIManager.put("TextField.font", font(12));
 		UIManager.put("OptionPane.background", Color.BLACK);
 		UIManager.put("Panel.background", Color.BLACK);
 		UIManager.put("Button.font", font(12));
-//		UIManager.put("Button.background", Color.ORANGE);
 		UIManager.put("Button.gradient", value);
 
 		LVL = JOptionPane.showOptionDialog(null, pytanie, tytul, JOptionPane.YES_NO_CANCEL_OPTION,
