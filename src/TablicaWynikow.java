@@ -64,10 +64,14 @@ public class TablicaWynikow extends JFrame implements ActionListener {
 			}
 		});
 		int i = 0;
+		String lvl="";
 		for (TablicaWynikow str : data) {
+			if(str.getLvl()==0) lvl ="Prosty";
+			else if(str.getLvl()==1) lvl ="Średni";
+			else lvl = "Trudny";
 			i++;
 			if (i < 11)
-				wyniki += i + "\t" + str.getNazwa() + "\t" + str.getPkt() + "\t" + str.getLvl() + "\t" + str.getData()
+				wyniki += i + "\t" + str.getNazwa() + "\t" + str.getPkt() + "\t" + lvl + "\t" + str.getData()
 						+ "\n";
 		}
 		return wyniki;
