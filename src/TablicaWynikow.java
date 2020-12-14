@@ -45,7 +45,7 @@ public class TablicaWynikow extends JFrame implements ActionListener {
 	public static String Rank() throws FileNotFoundException, NumberFormatException, ParseException {
 		String linia = "";
 		String[] dane = null;
-		String wyniki = "LP.\tImię\tPKT\tLVL\tData\n";
+		String wyniki = "LP.\tImię\tPKT\tLVL\n";
 
 		ArrayList<TablicaWynikow> data = new ArrayList<TablicaWynikow>();
 		Scanner scan = new Scanner(new File("wyniki.txt"));
@@ -64,15 +64,17 @@ public class TablicaWynikow extends JFrame implements ActionListener {
 			}
 		});
 		int i = 0;
-		String lvl="";
+		String lvl = "";
 		for (TablicaWynikow str : data) {
-			if(str.getLvl()==0) lvl ="Prosty";
-			else if(str.getLvl()==1) lvl ="Średni";
-			else lvl = "Trudny";
+			if (str.getLvl() == 0)
+				lvl = "Prosty";
+			else if (str.getLvl() == 1)
+				lvl = "Średni";
+			else
+				lvl = "Trudny";
 			i++;
 			if (i < 11)
-				wyniki += i + "\t" + str.getNazwa() + "\t" + str.getPkt() + "\t" + lvl + "\t" + str.getData()
-						+ "\n";
+				wyniki += i + "\t" + str.getNazwa() + "\t" + str.getPkt() + "\t" + lvl + "\n";
 		}
 		return wyniki;
 	}
