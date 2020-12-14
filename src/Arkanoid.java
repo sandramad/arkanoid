@@ -25,6 +25,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import java.awt.Toolkit;
@@ -280,17 +281,6 @@ class Arkanoid extends JFrame implements KeyListener {
 					g2.drawString(line, (SZEROKOSC / 2) - (titleLen / 2), (SZEROKOSC / 6) + (titleHeight * lineNumber));
 					lineNumber++;
 				}
-				String rank = "";
-				try {
-					rank = TablicaWynikow.Rank();
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				System.out.println(rank);
 
 			} else {
 				font = font.deriveFont(10f);
@@ -306,33 +296,35 @@ class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	class Ranking {
-		void paintComponent(Graphics g) {
+
+		protected void paintComponent(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
 			name();
 			if (LVL == 0)
 				font = font.deriveFont(15f);
-			else if (LVL == 1)
-				font = font.deriveFont(25f);
 			else
-				font = font.deriveFont(35f);
-			Color color = Color.DARK_GRAY;
+				font = font.deriveFont(25f);
+			
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			GradientPaint gColor1 = new GradientPaint(0, 0, color, SZEROKOSC / 2, 0, Color.BLACK);
+			GradientPaint gColor1 = new GradientPaint(0, 0, Color.DARK_GRAY, SZEROKOSC / 2, 0, Color.BLACK);
 			g2.setPaint(gColor1);
 			g2.fillRect(0, 0, SZEROKOSC / 2, WYSOKOSC);
-			GradientPaint gColor2 = new GradientPaint(SZEROKOSC / 2, 0, Color.BLACK, SZEROKOSC - 10, 0, color);
+			GradientPaint gColor2 = new GradientPaint(SZEROKOSC / 2, 0, Color.BLACK, SZEROKOSC - 10, 0,
+					Color.DARK_GRAY);
 			g2.setPaint(gColor2);
 			g2.fillRect(SZEROKOSC / 2 - 2, 0, SZEROKOSC / 2, WYSOKOSC);
 			g2.setColor(Color.WHITE);
 			g2.setFont(font);
-			String rank = null;
+			String rank = "";
 			try {
-				rank = TablicaWynikow.Rank();
+				rank += TablicaWynikow.Rank();
+				g2.drawString(rank, 10, 10);
 				System.out.println(rank);
 			} catch (NumberFormatException | FileNotFoundException | ParseException e) {
 				e.printStackTrace();
+			}  finally {
+				g2.dispose();
 			}
-			g2.drawString(rank, 0, 0);
 		}
 
 	}
@@ -689,7 +681,16 @@ class Arkanoid extends JFrame implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.VK_R) {
-			new Ranking();
+			BufferStrategy bf = this.getBufferStrategy();
+			Graphics g = null;
+			g = bf.getDrawGraphics();
+			Ranking ranking = new Ranking();
+			try {
+				ranking.paintComponent(g);
+			} finally {
+				g.dispose();
+			}
+			bf.show();
 		}
 		if (event.getKeyCode() == KeyEvent.VK_ESCAPE)
 
