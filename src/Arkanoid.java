@@ -215,7 +215,7 @@ class Arkanoid extends JFrame implements KeyListener {
 				wygrana = true;
 				text = name() + " wygrał" + plec + "! \nTwój wynik: " + wynik + " na " + (ZYCIA * KLOCKIX * KLOCKIY)
 						+ " punktów\n" + komunikatZyc + "\nWykonał" + plec + ": " + ruchy + odmianaRuchy()
-						+ "\n\nWciśnij Enter aby zrestartować" + "\n ESC wychodzi z gry";
+						+ "\n\nWciśnij Enter aby zrestartować" + "\n ESC wychodzi z gry\n\n Wciśnij R aby zobaczyć ranking";
 				dane.add(new TablicaWynikow(name(), wynik, LVL, nowDate));
 				zapisWyniku();
 			} else
@@ -237,7 +237,7 @@ class Arkanoid extends JFrame implements KeyListener {
 				koniec = true;
 				text = name() + " przegrał" + plec + "! \nTwój wynik: " + wynik + " na " + (ZYCIA * KLOCKIX * KLOCKIY)
 						+ " punktów\nWykonał" + plec + ": " + ruchy + odmianaRuchy() + "\n" + komunikatKloc
-						+ "\n\nWciśnij Enter aby zrestartować" + "\n ESC wychodzi z gry";
+						+ "\n\nWciśnij Enter aby zrestartować" + "\n ESC wychodzi z gry\n\n Wciśnij R aby zobaczyć ranking";
 				dane.add(new TablicaWynikow(name(), wynik, LVL, nowDate));
 				zapisWyniku();
 			} else
@@ -254,10 +254,8 @@ class Arkanoid extends JFrame implements KeyListener {
 				name();
 				if (LVL == 0)
 					font = font.deriveFont(15f);
-				else if (LVL == 1)
+				else 
 					font = font.deriveFont(25f);
-				else
-					font = font.deriveFont(35f);
 				Color color;
 				if (wygrana == true) {
 					color = new Color(0, 100, 50);
@@ -331,6 +329,7 @@ class Arkanoid extends JFrame implements KeyListener {
 			int lineNumber = 1;
 			for (String line : rank.split("\n")) {
 				int titleLen = fontMetrics.stringWidth(line);
+				
 				g2.drawString(line, (SZEROKOSC / 2) - (titleLen / 2), (SZEROKOSC / 6) + (titleHeight * lineNumber));
 				lineNumber++;
 			}
