@@ -298,6 +298,7 @@ class Arkanoid extends JFrame implements KeyListener {
 	class Ranking {
 
 		protected void paintComponent(Graphics g) {
+			font = font(12);
 			Graphics2D g2 = (Graphics2D) g;
 			name();
 			if (LVL == 0)
@@ -306,11 +307,11 @@ class Arkanoid extends JFrame implements KeyListener {
 				font = font.deriveFont(25f);
 			
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			FontMetrics fontMetrics = g2.getFontMetrics(font);
 			GradientPaint gColor1 = new GradientPaint(0, 0, Color.DARK_GRAY, SZEROKOSC / 2, 0, Color.BLACK);
 			g2.setPaint(gColor1);
 			g2.fillRect(0, 0, SZEROKOSC / 2, WYSOKOSC);
-			GradientPaint gColor2 = new GradientPaint(SZEROKOSC / 2, 0, Color.BLACK, SZEROKOSC - 10, 0,
-					Color.DARK_GRAY);
+			GradientPaint gColor2 = new GradientPaint(SZEROKOSC / 2, 0, Color.BLACK, SZEROKOSC - 10, 0, Color.DARK_GRAY);
 			g2.setPaint(gColor2);
 			g2.fillRect(SZEROKOSC / 2 - 2, 0, SZEROKOSC / 2, WYSOKOSC);
 			g2.setColor(Color.WHITE);
@@ -318,12 +319,20 @@ class Arkanoid extends JFrame implements KeyListener {
 			String rank = "";
 			try {
 				rank += TablicaWynikow.Rank();
-				g2.drawString(rank, 10, 10);
-				System.out.println(rank);
-			} catch (NumberFormatException | FileNotFoundException | ParseException e) {
-				e.printStackTrace();
-			}  finally {
-				g2.dispose();
+			} catch (NumberFormatException e1) {
+				e1.printStackTrace();
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+			
+			int titleHeight = fontMetrics.getHeight();
+			int lineNumber = 1;
+			for (String line : rank.split("\n")) {
+				int titleLen = fontMetrics.stringWidth(line);
+				g2.drawString(line, (SZEROKOSC / 2) - (titleLen / 2), (SZEROKOSC / 6) + (titleHeight * lineNumber));
+				lineNumber++;
 			}
 		}
 
