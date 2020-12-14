@@ -42,7 +42,7 @@ public class TablicaWynikow extends JFrame implements ActionListener {
 		return pkt;
 	}
 
-	public static String Rank() throws FileNotFoundException, NumberFormatException, ParseException {
+	public static String Rank(int l) throws FileNotFoundException, NumberFormatException, ParseException {
 		String linia = "";
 		String[] dane = null;
 		String wyniki = "";
@@ -64,24 +64,19 @@ public class TablicaWynikow extends JFrame implements ActionListener {
 			}
 		});
 		int i = 0;
-		String lvl = "";
 		for (TablicaWynikow str : data) {
-			if (str.getLvl() == 0)
-				lvl = "Prosty";
-			else if (str.getLvl() == 1)
-				lvl = "Średni";
-			else
-				lvl = "Trudny";
-			i++;
-			if (i < 11)
-				wyniki += i + " " + str.getNazwa() + " " + str.getPkt() + " " + lvl + "\n";
+			if (l == str.getLvl()) {
+				i++;
+				if (i < 11)
+					wyniki += i + " " + str.getNazwa() + " " + str.getPkt() + "\n";
+			}
 		}
 		return wyniki;
 	}
 
 	public static void main(String[] args) {
 		try {
-			System.out.println(Rank());
+			System.out.println(Rank(0));
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {

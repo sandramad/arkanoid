@@ -296,14 +296,10 @@ class Arkanoid extends JFrame implements KeyListener {
 	class Ranking {
 
 		protected void paintComponent(Graphics g) {
-			font = font(12);
+			font = font(15);
 			Graphics2D g2 = (Graphics2D) g;
 			name();
-			if (LVL == 0)
-				font = font.deriveFont(15f);
-			else
-				font = font.deriveFont(25f);
-			
+				
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			FontMetrics fontMetrics = g2.getFontMetrics(font);
 			GradientPaint gColor1 = new GradientPaint(0, 0, Color.DARK_GRAY, SZEROKOSC / 2, 0, Color.BLACK);
@@ -316,7 +312,8 @@ class Arkanoid extends JFrame implements KeyListener {
 			g2.setFont(font);
 			String rank = "";
 			try {
-				rank += TablicaWynikow.Rank();
+				rank += TablicaWynikow.Rank(LVL);
+				rank +="\nWciśnij Enter aby zrestartować\n ESC wychodzi z gry";
 			} catch (NumberFormatException e1) {
 				e1.printStackTrace();
 			} catch (FileNotFoundException e1) {
