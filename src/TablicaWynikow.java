@@ -68,7 +68,7 @@ public class TablicaWynikow extends JFrame implements ActionListener {
 			if (l == str.getLvl()) {
 				i++;
 				if (i < 11)
-					wyniki += i + " " + str.getNazwa() + " " + str.getPkt() + "\n";
+					wyniki += i + ". " + str.getNazwa() + " " + str.getPkt() + "\n";
 			}
 		}
 		return wyniki;
