@@ -768,6 +768,14 @@ class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	public static void start() {
+		 File file = new File("wyniki.txt");
+         if(!file.exists()) {
+             try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+         }
 		uruchom = true;
 		pytanie.setFont(font(14));
 		pytanie.setForeground(Color.WHITE);
