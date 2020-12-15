@@ -21,10 +21,10 @@ public class Start extends Thread {
 			inputStream = AudioSystem.getAudioInputStream(new File(wav));
 			clip = AudioSystem.getClip();
 			clip.open(inputStream);
-			while(loop){
-	            clip.start();
-	            clip.loop(Clip.LOOP_CONTINUOUSLY);              
-	        } 
+			while (loop) {
+				clip.start();
+				clip.loop(Clip.LOOP_CONTINUOUSLY);
+			}
 		} catch (UnsupportedAudioFileException e1) {
 			e1.printStackTrace();
 		} catch (IOException e) {
@@ -32,11 +32,9 @@ public class Start extends Thread {
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public static void main(String[] args) {
-
 		watek.start();
 		Arkanoid.start();
 	}

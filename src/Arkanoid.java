@@ -165,14 +165,13 @@ class Arkanoid extends JFrame implements KeyListener {
 				e.printStackTrace();
 			}
 
-			while (scan.hasNextLine()) {
-				zawartoscPliku += scan.nextLine();
-				zawartoscPliku += "\n";
-			}
+			while (scan.hasNextLine())
+				zawartoscPliku += scan.nextLine() + "\n";
+
 			scan.close();
-			for (TablicaWynikow x : dane) {
+			for (TablicaWynikow x : dane)
 				zawartoscPliku += x.getNazwa() + ";" + x.getPkt() + ";" + x.lvl + ";" + x.getData();
-			}
+
 			PrintWriter pw;
 			try {
 				pw = new PrintWriter(new File("wyniki.txt"));
@@ -215,7 +214,8 @@ class Arkanoid extends JFrame implements KeyListener {
 				wygrana = true;
 				text = name() + " wygrał" + plec + "! \nTwój wynik: " + wynik + " na " + (ZYCIA * KLOCKIX * KLOCKIY)
 						+ " punktów\n" + komunikatZyc + "\nWykonał" + plec + ": " + ruchy + odmianaRuchy()
-						+ "\n\nWciśnij Enter aby zrestartować" + "\n ESC wychodzi z gry\n\n Wciśnij R aby zobaczyć ranking";
+						+ "\n\nWciśnij Enter aby zrestartować"
+						+ "\n ESC wychodzi z gry\n\n Wciśnij R aby zobaczyć ranking";
 				dane.add(new TablicaWynikow(name(), wynik, LVL, nowDate));
 				zapisWyniku();
 			} else
@@ -237,7 +237,8 @@ class Arkanoid extends JFrame implements KeyListener {
 				koniec = true;
 				text = name() + " przegrał" + plec + "! \nTwój wynik: " + wynik + " na " + (ZYCIA * KLOCKIX * KLOCKIY)
 						+ " punktów\nWykonał" + plec + ": " + ruchy + odmianaRuchy() + "\n" + komunikatKloc
-						+ "\n\nWciśnij Enter aby zrestartować" + "\n ESC wychodzi z gry\n\n Wciśnij R aby zobaczyć ranking";
+						+ "\n\nWciśnij Enter aby zrestartować"
+						+ "\n ESC wychodzi z gry\n\n Wciśnij R aby zobaczyć ranking";
 				dane.add(new TablicaWynikow(name(), wynik, LVL, nowDate));
 				zapisWyniku();
 			} else
@@ -254,14 +255,14 @@ class Arkanoid extends JFrame implements KeyListener {
 				name();
 				if (LVL == 0)
 					font = font.deriveFont(15f);
-				else 
+				else
 					font = font.deriveFont(25f);
 				Color color;
-				if (wygrana == true) {
+				if (wygrana == true)
 					color = new Color(0, 100, 50);
-				} else {
+				else
 					color = new Color(100, 0, 50);
-				}
+
 				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 				FontMetrics fontMetrics = g2.getFontMetrics(font);
 				GradientPaint gColor1 = new GradientPaint(0, 0, color, SZEROKOSC / 2, 0, Color.BLACK);
@@ -279,7 +280,6 @@ class Arkanoid extends JFrame implements KeyListener {
 					g2.drawString(line, (SZEROKOSC / 2) - (titleLen / 2), (SZEROKOSC / 6) + (titleHeight * lineNumber));
 					lineNumber++;
 				}
-
 			} else {
 				font = font.deriveFont(10f);
 				FontMetrics fontMetrics = g2.getFontMetrics(font);
@@ -287,25 +287,24 @@ class Arkanoid extends JFrame implements KeyListener {
 				g2.setFont(font);
 				int titleLen = fontMetrics.stringWidth(text);
 				g2.drawString(text, (SZEROKOSC / 2) - (titleLen / 2), WYSOKOSC - 15);
-
 			}
 		}
 
 	}
 
 	class Ranking {
-
 		protected void paintComponent(Graphics g) {
 			font = font(15);
 			Graphics2D g2 = (Graphics2D) g;
 			name();
-				
+
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			FontMetrics fontMetrics = g2.getFontMetrics(font);
 			GradientPaint gColor1 = new GradientPaint(0, 0, Color.DARK_GRAY, SZEROKOSC / 2, 0, Color.BLACK);
 			g2.setPaint(gColor1);
 			g2.fillRect(0, 0, SZEROKOSC / 2, WYSOKOSC);
-			GradientPaint gColor2 = new GradientPaint(SZEROKOSC / 2, 0, Color.BLACK, SZEROKOSC - 10, 0, Color.DARK_GRAY);
+			GradientPaint gColor2 = new GradientPaint(SZEROKOSC / 2, 0, Color.BLACK, SZEROKOSC - 10, 0,
+					Color.DARK_GRAY);
 			g2.setPaint(gColor2);
 			g2.fillRect(SZEROKOSC / 2 - 2, 0, SZEROKOSC / 2, WYSOKOSC);
 			g2.setColor(Color.WHITE);
@@ -313,7 +312,7 @@ class Arkanoid extends JFrame implements KeyListener {
 			String rank = "";
 			try {
 				rank += TablicaWynikow.Rank(LVL);
-				rank +="\nWciśnij Enter aby zrestartować\n ESC wychodzi z gry";
+				rank += "\nWciśnij Enter aby zrestartować\n ESC wychodzi z gry";
 			} catch (NumberFormatException e1) {
 				e1.printStackTrace();
 			} catch (FileNotFoundException e1) {
@@ -321,12 +320,11 @@ class Arkanoid extends JFrame implements KeyListener {
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			}
-			
+
 			int titleHeight = fontMetrics.getHeight();
 			int lineNumber = 1;
 			for (String line : rank.split("\n")) {
 				int titleLen = fontMetrics.stringWidth(line);
-				
 				g2.drawString(line, (SZEROKOSC / 2) - (titleLen / 2), (SZEROKOSC / 6) + (titleHeight * lineNumber));
 				lineNumber++;
 			}
@@ -346,13 +344,12 @@ class Arkanoid extends JFrame implements KeyListener {
 		}
 
 		void update() {
-			if (LVL == 0) {
+			if (LVL == 0)
 				PREDKOSC = 0.5;
-			} else if (LVL == 1) {
+			else if (LVL == 1)
 				PREDKOSC = 0.75;
-			} else {
+			else
 				PREDKOSC = 1;
-			}
 			if (PREDKOSC > 0)
 				x += predkosc * PREDKOSC;
 		}
@@ -362,19 +359,17 @@ class Arkanoid extends JFrame implements KeyListener {
 		}
 
 		void ruchLewo() {
-			if (lewo() > 0.0 && pauza == false) {
+			if (lewo() > 0.0 && pauza == false)
 				predkosc = -PALETKA_PREDKOSC;
-			} else {
+			else
 				predkosc = 0.0;
-			}
 		}
 
 		void ruchPrawo() {
-			if (prawo() < SZEROKOSC && pauza == false) {
+			if (prawo() < SZEROKOSC && pauza == false)
 				predkosc = PALETKA_PREDKOSC;
-			} else {
+			else
 				predkosc = 0.0;
-			}
 		}
 
 		void paintComponent(Graphics g) {
@@ -407,7 +402,6 @@ class Arkanoid extends JFrame implements KeyListener {
 		}
 
 		private Color losujColor2() {
-
 			Color color2 = new Color((int) (Math.random() * 127), (int) (Math.random() * 127),
 					(int) (Math.random() * 127));
 			return color2;
@@ -418,7 +412,6 @@ class Arkanoid extends JFrame implements KeyListener {
 			GradientPaint gColor = new GradientPaint((int) lewo(), (int) gora(), losujColor(),
 					(int) (lewo() + sizeX / 2), (int) gora(), losujColor2());
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
 			g2.setPaint(gColor);
 			g2.fillRect((int) lewo(), (int) gora(), (int) sizeX, (int) sizeY);
 		}
@@ -441,7 +434,6 @@ class Arkanoid extends JFrame implements KeyListener {
 
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
 			g2.setColor(pilkaColor);
 			g2.fillOval((int) lewo(), (int) gora(), (int) promien * 2, (int) promien * 2);
 
@@ -535,11 +527,9 @@ class Arkanoid extends JFrame implements KeyListener {
 	void inicjujKlocki(List<Klocek> klocki) {
 		klocki.clear();
 
-		for (int iX = 0; iX < KLOCKIX; ++iX) {
-			for (int iY = 0; iY < KLOCKIY; ++iY) {
+		for (int iX = 0; iX < KLOCKIX; ++iX)
+			for (int iY = 0; iY < KLOCKIY; ++iY)
 				klocki.add(new Klocek((iX + 1) * (KLOCEK_SZEROKOSC + 5) + 20, (iY + 5) * (KLOCEK_WYSOKOSC + 5) + 20));
-			}
-		}
 	}
 
 	Arkanoid() {
