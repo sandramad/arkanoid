@@ -157,6 +157,7 @@ class Arkanoid extends JFrame implements KeyListener {
 
 		void zapisWyniku() {
 			String zawartoscPliku = "";
+			String zawartoscTmp = "";
 
 			Scanner scan = null;
 			try {
@@ -181,7 +182,27 @@ class Arkanoid extends JFrame implements KeyListener {
 				e.printStackTrace();
 			}
 
-			System.out.println();
+			try {
+				scan = new Scanner(new File("wynikiTmp.txt"));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			while (scan.hasNextLine())
+				zawartoscTmp += scan.nextLine() + "\n";
+
+			scan.close();
+			for (TablicaWynikow x : dane)
+				zawartoscTmp += x.getNazwa() + ";" + x.getPkt() + ";" + x.lvl + ";" + x.getData();
+
+			PrintWriter pwTmp;
+			try {
+				pwTmp = new PrintWriter(new File("wynikiTmp.txt"));
+				pwTmp.print(zawartoscTmp);
+				pwTmp.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 
 		String odmianaRuchy() {
@@ -320,7 +341,10 @@ class Arkanoid extends JFrame implements KeyListener {
 			g2.setFont(font);
 			String rank = "";
 			try {
-				rank += TablicaWynikow.Rank(LVL);
+				rank += "Top 5 podczas sesji:\n";
+				rank += TablicaWynikow.Rank(LVL, 5, "wynikiTmp.txt");
+				rank += "\nTop 10:\n";
+				rank += TablicaWynikow.Rank(LVL, 10, "wyniki.txt");
 				rank += "\nWciśnij Enter aby zrestartować\n ESC wychodzi z gry";
 			} catch (NumberFormatException e1) {
 				e1.printStackTrace();
@@ -622,7 +646,8 @@ class Arkanoid extends JFrame implements KeyListener {
 			this.setTitle("Arkanoid " + poziom);
 
 		}
-
+		File fileTmp = new File("wynikiTmp.txt");
+		fileTmp.delete();
 		this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 
 	}
@@ -768,14 +793,21 @@ class Arkanoid extends JFrame implements KeyListener {
 	}
 
 	public static void start() {
-		 File file = new File("wyniki.txt");
-         if(!file.exists()) {
-             try {
+		File file = new File("wyniki.txt");
+		File fileTmp = new File("wynikiTmp.txt");
+		
+		try {
+			fileTmp.createNewFile();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		if (!file.exists()) {
+			try {
 				file.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-         }
+		}
 		uruchom = true;
 		pytanie.setFont(font(14));
 		pytanie.setForeground(Color.WHITE);

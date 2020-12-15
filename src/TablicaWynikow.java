@@ -42,13 +42,13 @@ public class TablicaWynikow extends JFrame implements ActionListener {
 		return pkt;
 	}
 
-	public static String Rank(int l) throws FileNotFoundException, NumberFormatException, ParseException {
+	public static String Rank(int l, int ile, String plik) throws FileNotFoundException, NumberFormatException, ParseException {
 		String linia = "";
 		String[] dane = null;
 		String wyniki = "";
 
 		ArrayList<TablicaWynikow> data = new ArrayList<TablicaWynikow>();
-		Scanner scan = new Scanner(new File("wyniki.txt"));
+		Scanner scan = new Scanner(new File(plik));
 
 		while (scan.hasNextLine()) {
 			linia = scan.nextLine();
@@ -67,7 +67,7 @@ public class TablicaWynikow extends JFrame implements ActionListener {
 		for (TablicaWynikow str : data) {
 			if (l == str.getLvl()) {
 				i++;
-				if (i < 11)
+				if (i <= ile)
 					wyniki += i + ". " + str.getNazwa() + " " + str.getPkt() + "\n";
 			}
 		}
@@ -76,9 +76,9 @@ public class TablicaWynikow extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		try {
-			System.out.println(Rank(0));
-			System.out.println(Rank(1));
-			System.out.println(Rank(2));
+			System.out.println(Rank(0, 10, "wyniki.txt"));
+			System.out.println(Rank(1, 10, "wyniki.txt"));
+			System.out.println(Rank(2, 10, "wyniki.txt"));
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
