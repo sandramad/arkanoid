@@ -6,8 +6,6 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-// import javazoom.jl.player.Player;
-
 public class Start extends Thread {
 	static Runnable muzyka = new Start();
 	static Thread watek = new Thread(muzyka);
@@ -27,7 +25,6 @@ public class Start extends Thread {
 	            clip.start();
 	            clip.loop(Clip.LOOP_CONTINUOUSLY);              
 	        } 
-
 		} catch (UnsupportedAudioFileException e1) {
 			e1.printStackTrace();
 		} catch (IOException e) {
