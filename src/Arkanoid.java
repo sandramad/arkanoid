@@ -199,8 +199,12 @@ class Arkanoid extends JFrame implements KeyListener {
 
 		void podsumowanie() {
 			wynik += 1 * zyc;
-
+			int bonus = 0;
 			if (kloc <= 1) {
+				if (LVL > 0) {
+					bonus = 100;
+				}
+				wynik += bonus;
 				name();
 				String komunikatZyc = "";
 				if (zyc == ZYCIA)
@@ -212,9 +216,9 @@ class Arkanoid extends JFrame implements KeyListener {
 				if (name().substring(name().length() - 1).equals("a"))
 					plec = "aś";
 				wygrana = true;
-				text = name() + " wygrał" + plec + "! \nTwój wynik: " + wynik + " na " + (ZYCIA * KLOCKIX * KLOCKIY)
-						+ " punktów\n" + komunikatZyc + "\nWykonał" + plec + ": " + ruchy + odmianaRuchy()
-						+ "\n\nWciśnij Enter aby zrestartować"
+				text = name() + " wygrał" + plec + "! \nTwój wynik: " + wynik + " na "
+						+ (ZYCIA * KLOCKIX * KLOCKIY + bonus) + " punktów\n" + komunikatZyc + "\nWykonał" + plec + ": "
+						+ ruchy + odmianaRuchy() + "\n\nWciśnij Enter aby zrestartować"
 						+ "\n ESC wychodzi z gry\n\n Wciśnij R aby zobaczyć ranking";
 				dane.add(new TablicaWynikow(name(), wynik, LVL, nowDate));
 				zapisWyniku();

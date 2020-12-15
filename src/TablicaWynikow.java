@@ -77,6 +77,8 @@ public class TablicaWynikow extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		try {
 			System.out.println(Rank(0));
+			System.out.println(Rank(1));
+			System.out.println(Rank(2));
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
